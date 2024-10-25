@@ -1,43 +1,26 @@
 import { useState } from 'react';
 
 import GameBoard from './components/GameBoard';
+import GameOver from './components/GameOver';
 import Log from './components/Log';
 import Player from './components/Player';
 
-import { INITIAL_GAME_BOARD, WINNING_COMBINATIONS } from './const';
-
+import { Board } from './models/Board';
+import { Players } from './models/Players';
 import { Symbols } from './models/Symbols';
 import { Turns } from './models/Turns';
-import GameOver from './components/GameOver';
 
-function App() {
-  const [players, setPlayers] = useState({
-    [Symbols.X]: 'Player 1',
-    [Symbols.O]: 'Player 2',
-  });
-  const [gameTurns, setGameTurns] = useState<Turns>([]);
+import { INITIAL_GAME_BOARD, WINNING_COMBINATIONS } from './const';
 
-  const deriveActivePlayer = (gameTurns: Turns) => {
-    let currentPlayer = Symbols.X;
+const deriveActivePlayer = (gameTurns: Turns) => {
+  let currentPlayer = Symbols.X;
 
-    if (gameTurns[0]?.player === Symbols.X) currentPlayer = Symbols.O;
+  if (gameTurns[0]?.player === Symbols.X) currentPlayer = Symbols.O;
 
-    return currentPlayer;
-  };
+  return currentPlayer;
+};
 
-  const activePlayerSymbol = deriveActivePlayer(gameTurns);
-
-  // const gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
-  const gameBoard = structuredClone(INITIAL_GAME_BOARD);
-
-  // Convert game turns into a board.
-  for (const turn of gameTurns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    gameBoard[row][col] = player;
-  }
-
+const deriveWinner = (gameBoard: Board, players: Players) => {
   // Check symbols in the squares and compare to find a winner.
   let winner: string | undefined;
   for (const combination of WINNING_COMBINATIONS) {
@@ -50,6 +33,37 @@ function App() {
       break;
     }
   }
+
+  return winner;
+};
+
+const deriveGameBoard = (gameTurns: Turns) => {
+  // const gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
+  const gameBoard = structuredClone(INITIAL_GAME_BOARD);
+
+  // Convert game turns into a board.
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
+
+  return gameBoard;
+};
+
+function App() {
+  const [players, setPlayers] = useState<Players>({
+    [Symbols.X]: 'Player 1',
+    [Symbols.O]: 'Player 2',
+  });
+  const [gameTurns, setGameTurns] = useState<Turns>([]);
+
+  const activePlayerSymbol = deriveActivePlayer(gameTurns);
+
+  const gameBoard = deriveGameBoard(gameTurns);
+
+  const winner = deriveWinner(gameBoard, players);
 
   const hasDraw = gameTurns.length === 9 && !winner;
 
