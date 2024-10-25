@@ -1,8 +1,10 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 
+import { Symbols } from '../models/Symbols';
+
 interface PlayerProps {
   name: string;
-  symbol: string;
+  symbol: Symbols;
 }
 
 const Player = ({ name, symbol }: PlayerProps) => {
