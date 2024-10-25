@@ -10,13 +10,10 @@ import { Game } from './models/Game';
 
 function App() {
   const [game, setGame] = useState<Game>(
-    new Game(
-      {
-        [Symbols.X]: 'Player 1',
-        [Symbols.O]: 'Player 2',
-      },
-      []
-    )
+    new Game({
+      [Symbols.X]: 'Player 1',
+      [Symbols.O]: 'Player 2',
+    })
   );
 
   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
@@ -29,7 +26,7 @@ function App() {
 
   const handleRematch = () => {
     setGame((prevGame: Game) => {
-      const newGame = new Game({ ...prevGame.players }, []);
+      const newGame = new Game({ ...prevGame.players });
       newGame.reset();
       return newGame;
     });

@@ -11,7 +11,7 @@ export class Game {
   private _board: Board;
   private _winner: string | undefined;
 
-  constructor(players: Players, turns: Turns) {
+  constructor(players: Players, turns: Turns = []) {
     this._players = players;
     this._turns = turns;
     this._board = structuredClone(INITIAL_GAME_BOARD);
