@@ -9,12 +9,7 @@ import { Symbols } from './models/Symbols';
 import { Game } from './models/Game';
 
 function App() {
-  const [game, setGame] = useState<Game>(
-    new Game({
-      [Symbols.X]: 'Player 1',
-      [Symbols.O]: 'Player 2',
-    })
-  );
+  const [game, setGame] = useState<Game>(new Game());
 
   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
     setGame((prevGame: Game) => {
