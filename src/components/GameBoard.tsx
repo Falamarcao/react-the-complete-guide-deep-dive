@@ -17,23 +17,6 @@ interface GameBoardProps {
 }
 
 const GameBoard = ({ onSelectSquare, turns }: GameBoardProps) => {
-  //   const [gameBoard, setGameBoard] = useState<Board>(initialGameBoard);
-
-  //   const handlePlay = (
-  //     rowIndex: number,
-  //     colIndex: number,
-  //     symbol: Symbols | null
-  //   ) => {
-  //     setGameBoard((prevGameBoard: Board) => {
-  //       // Making a copy of the game board
-  //       // Node: Arrays pass by reference, so we need a copy to avoid dealing with bugs.
-  //       const gameBoard = [...prevGameBoard.map((innerArray) => [...innerArray])];
-  //       gameBoard[rowIndex][colIndex] = symbol;
-  //       return gameBoard;
-  //     });
-  //     onSelectSquare();
-  //   };
-
   const gameBoard: Board = initialGameBoard;
 
   for (const turn of turns) {
