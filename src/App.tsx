@@ -8,6 +8,7 @@ import { INITIAL_GAME_BOARD, WINNING_COMBINATIONS } from './const';
 
 import { Symbols } from './models/Symbols';
 import { Turns } from './models/Turns';
+import GameOver from './components/GameOver';
 
 function App() {
   const [gameTurns, setGameTurns] = useState<Turns>([]);
@@ -22,14 +23,31 @@ function App() {
 
   const activePlayerSymbol = deriveActivePLayer(gameTurns);
 
-  const gameBoard = INITIAL_GAME_BOARD;
+  // const gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
+  const gameBoard = structuredClone(INITIAL_GAME_BOARD);
 
+  // Convert game turns into a board.
   for (const turn of gameTurns) {
     const { square, player } = turn;
     const { row, col } = square;
 
     gameBoard[row][col] = player;
   }
+
+  // Check symbols in the squares and compare to find a winner.
+  let winner: Symbols | undefined;
+  for (const combination of WINNING_COMBINATIONS) {
+    const first = gameBoard[combination[0].row][combination[0].col];
+    const second = gameBoard[combination[1].row][combination[1].col];
+    const third = gameBoard[combination[2].row][combination[2].col];
+
+    if (first && first === second && first === third) {
+      winner = first;
+      break;
+    }
+  }
+
+  const hasDraw = gameTurns.length === 9 && !winner;
 
   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
     setGameTurns((prevTurns) => {
@@ -46,6 +64,8 @@ function App() {
     });
   };
 
+  const handleRematch = () => setGameTurns([]);
+
   return (
     <main>
       <div id="game-container">
@@ -61,6 +81,9 @@ function App() {
             isActive={activePlayerSymbol === Symbols.O}
           />
         </ol>
+        {(winner || hasDraw) && (
+          <GameOver onClickRematch={handleRematch} winner={winner} />
+        )}
         <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
       <Log turns={gameTurns} />
