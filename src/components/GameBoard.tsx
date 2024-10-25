@@ -1,34 +1,16 @@
 // import { useState } from 'react';
 
-import { Symbols } from '../models/Symbols';
-import { Turns } from '../models/Turns';
-
-type Board = Array<Array<Symbols | null>>;
-
-const initialGameBoard: Board = [
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
+import { Board } from '../models/Board';
 
 interface GameBoardProps {
   onSelectSquare: (rowIndex: number, colIndex: number) => void;
-  turns: Turns;
+  board: Board;
 }
 
-const GameBoard = ({ onSelectSquare, turns }: GameBoardProps) => {
-  const gameBoard: Board = initialGameBoard;
-
-  for (const turn of turns) {
-    const { square, player } = turn;
-    const { row, col } = square;
-
-    gameBoard[row][col] = player;
-  }
-
+const GameBoard = ({ onSelectSquare, board }: GameBoardProps) => {
   return (
     <ol id="game-board">
-      {gameBoard.map((row, rowIndex) => (
+      {board.map((row, rowIndex) => (
         <li key={rowIndex}>
           <ol>
             {row.map((playerSymbol, colIndex) => (

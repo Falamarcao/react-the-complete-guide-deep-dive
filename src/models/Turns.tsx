@@ -1,7 +1,8 @@
+import { Coordinate } from './Coordinate';
 import { Symbols } from './Symbols';
 
 export interface Turn {
-  square: { row: number; col: number };
+  square: Coordinate;
   player: Symbols;
 }
 

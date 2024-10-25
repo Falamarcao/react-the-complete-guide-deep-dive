@@ -4,6 +4,8 @@ import GameBoard from './components/GameBoard';
 import Log from './components/Log';
 import Player from './components/Player';
 
+import { INITIAL_GAME_BOARD, WINNING_COMBINATIONS } from './const';
+
 import { Symbols } from './models/Symbols';
 import { Turns } from './models/Turns';
 
@@ -19,6 +21,15 @@ function App() {
   };
 
   const activePlayerSymbol = deriveActivePLayer(gameTurns);
+
+  const gameBoard = INITIAL_GAME_BOARD;
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, col } = square;
+
+    gameBoard[row][col] = player;
+  }
 
   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
     setGameTurns((prevTurns) => {
@@ -50,7 +61,7 @@ function App() {
             isActive={activePlayerSymbol === Symbols.O}
           />
         </ol>
-        <GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns} />
+        <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
       <Log turns={gameTurns} />
     </main>
