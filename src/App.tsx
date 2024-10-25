@@ -11,9 +11,13 @@ import { Turns } from './models/Turns';
 import GameOver from './components/GameOver';
 
 function App() {
+  const [players, setPlayers] = useState({
+    [Symbols.X]: 'Player 1',
+    [Symbols.O]: 'Player 2',
+  });
   const [gameTurns, setGameTurns] = useState<Turns>([]);
 
-  const deriveActivePLayer = (gameTurns: Turns) => {
+  const deriveActivePlayer = (gameTurns: Turns) => {
     let currentPlayer = Symbols.X;
 
     if (gameTurns[0]?.player === Symbols.X) currentPlayer = Symbols.O;
@@ -21,7 +25,7 @@ function App() {
     return currentPlayer;
   };
 
-  const activePlayerSymbol = deriveActivePLayer(gameTurns);
+  const activePlayerSymbol = deriveActivePlayer(gameTurns);
 
   // const gameBoard = [...INITIAL_GAME_BOARD.map((array) => [...array])];
   const gameBoard = structuredClone(INITIAL_GAME_BOARD);
@@ -35,14 +39,14 @@ function App() {
   }
 
   // Check symbols in the squares and compare to find a winner.
-  let winner: Symbols | undefined;
+  let winner: string | undefined;
   for (const combination of WINNING_COMBINATIONS) {
     const first = gameBoard[combination[0].row][combination[0].col];
     const second = gameBoard[combination[1].row][combination[1].col];
     const third = gameBoard[combination[2].row][combination[2].col];
 
     if (first && first === second && first === third) {
-      winner = first;
+      winner = players[first];
       break;
     }
   }
@@ -51,7 +55,7 @@ function App() {
 
   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
     setGameTurns((prevTurns) => {
-      let currentPlayer = deriveActivePLayer(prevTurns);
+      let currentPlayer = deriveActivePlayer(prevTurns);
 
       if (prevTurns[0]?.player === Symbols.X) currentPlayer = Symbols.O;
 
@@ -66,20 +70,23 @@ function App() {
 
   const handleRematch = () => setGameTurns([]);
 
+  const handlePlayerNameChange = (symbol: Symbols, newName: string) => {
+    setPlayers((prevPlayers) => ({ ...prevPlayers, [symbol]: newName }));
+  };
+
   return (
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
-          <Player
-            name="Player 1"
-            symbol={Symbols.X}
-            isActive={activePlayerSymbol === Symbols.X}
-          />
-          <Player
-            name="Player 2"
-            symbol={Symbols.O}
-            isActive={activePlayerSymbol === Symbols.O}
-          />
+          {Object.values(Symbols).map((symbol) => (
+            <Player
+              key={symbol}
+              name={players[symbol]}
+              symbol={Symbols.X}
+              isActive={activePlayerSymbol === symbol}
+              onChangeName={handlePlayerNameChange}
+            />
+          ))}
         </ol>
         {(winner || hasDraw) && (
           <GameOver onClickRematch={handleRematch} winner={winner} />

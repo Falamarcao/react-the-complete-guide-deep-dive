@@ -6,9 +6,10 @@ interface PlayerProps {
   name: string;
   symbol: Symbols;
   isActive: boolean;
+  onChangeName: (symbol: Symbols, newName: string) => void;
 }
 
-const Player = ({ name, symbol, isActive }: PlayerProps) => {
+const Player = ({ name, symbol, isActive, onChangeName }: PlayerProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [playerName, setPlayerName] = useState<string>(name);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -21,7 +22,10 @@ const Player = ({ name, symbol, isActive }: PlayerProps) => {
   }, [isEditing]);
 
   const handleClick = () => {
-    if (isEditing && inputRef.current) setPlayerName(inputRef.current.value);
+    if (isEditing && inputRef.current) {
+      setPlayerName(inputRef.current.value);
+      onChangeName(symbol, inputRef.current.value);
+    }
 
     setIsEditing((prevValue: boolean) => !prevValue);
   };
