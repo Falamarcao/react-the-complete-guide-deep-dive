@@ -5,9 +5,10 @@ import { Symbols } from '../models/Symbols';
 interface PlayerProps {
   name: string;
   symbol: Symbols;
+  isActive: boolean;
 }
 
-const Player = ({ name, symbol }: PlayerProps) => {
+const Player = ({ name, symbol, isActive }: PlayerProps) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [playerName, setPlayerName] = useState<string>(name);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,7 +32,7 @@ const Player = ({ name, symbol }: PlayerProps) => {
   };
 
   return (
-    <li>
+    <li className={isActive ? 'active' : undefined}>
       <span className="player">
         {isEditing ? (
           <form onSubmit={handleSubmit}>

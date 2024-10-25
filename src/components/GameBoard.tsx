@@ -10,7 +10,12 @@ const initialGameBoard: Board = [
   [null, null, null],
 ];
 
-const GameBoard = () => {
+interface GameBoardProps {
+  onSelectSquare: () => void;
+  activePlayerSymbol: Symbols;
+}
+
+const GameBoard = ({ onSelectSquare, activePlayerSymbol }: GameBoardProps) => {
   const [gameBoard, setGameBoard] = useState<Board>(initialGameBoard);
 
   const handlePlay = (
@@ -25,6 +30,7 @@ const GameBoard = () => {
       gameBoard[rowIndex][colIndex] = symbol;
       return gameBoard;
     });
+    onSelectSquare();
   };
 
   return (
@@ -35,7 +41,9 @@ const GameBoard = () => {
             {row.map((playerSymbol, colIndex) => (
               <li key={colIndex}>
                 <button
-                  onClick={() => handlePlay(rowIndex, colIndex, Symbols.X)}
+                  onClick={() =>
+                    handlePlay(rowIndex, colIndex, activePlayerSymbol)
+                  }
                 >
                   {playerSymbol}
                 </button>
