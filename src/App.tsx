@@ -9,15 +9,20 @@ import { Turns } from './models/Turns';
 
 function App() {
   const [gameTurns, setGameTurns] = useState<Turns>([]);
-  const [activePlayerSymbol, setActivePlayerSymbol] = useState(Symbols.X);
+
+  const deriveActivePLayer = (gameTurns: Turns) => {
+    let currentPlayer = Symbols.X;
+
+    if (gameTurns[0]?.player === Symbols.X) currentPlayer = Symbols.O;
+
+    return currentPlayer;
+  };
+
+  const activePlayerSymbol = deriveActivePLayer(gameTurns);
 
   const handleSelectSquare = (rowIndex: number, colIndex: number) => {
-    setActivePlayerSymbol((prevSymbol) =>
-      prevSymbol === Symbols.X ? Symbols.O : Symbols.X
-    );
-
     setGameTurns((prevTurns) => {
-      let currentPlayer = Symbols.X;
+      let currentPlayer = deriveActivePLayer(prevTurns);
 
       if (prevTurns[0]?.player === Symbols.X) currentPlayer = Symbols.O;
 
