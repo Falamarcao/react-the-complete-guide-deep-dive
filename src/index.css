@@ -120,6 +120,10 @@ h1 {
   text-align: center;
 }
 
+.player form {
+  display: inline;
+}
+
 .player input {
   font: inherit;
   font-size: 1rem;
